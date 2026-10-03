@@ -9,8 +9,11 @@ $page = dvwaPageNewGrab();
 $page[ 'title' ] .= 'Source' . $page[ 'title_separator' ].$page[ 'title' ];
 
 if (array_key_exists ("id", $_GET) && array_key_exists ("security", $_GET)) {
-	$id       = $_GET[ 'id' ];
-	$security = $_GET[ 'security' ];
+	$id       = htmlspecialchars( $_GET[ 'id' ], ENT_QUOTES, 'UTF-8' );
+	$security = htmlspecialchars( $_GET[ 'security' ], ENT_QUOTES, 'UTF-8' );
+	// Lista blanca: solo valores esperados (evita XSS y path traversal en las rutas)
+	if( !preg_match( '/^[a-z_]+$/', $id ) ) { $id = ''; }
+	if( !in_array( $security, array( 'low', 'medium', 'high', 'impossible' ), true ) ) { $security = 'low'; }
 
 
 	switch ($id) {
